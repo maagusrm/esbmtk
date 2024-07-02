@@ -63,7 +63,7 @@ def add_my_burial(
     po4_export_flux: Flux,
     frac_burial: float,
     min_burial_fraction: float,
-    max_burial_fraction:float,
+    max_burial_fraction: float,
 ) -> None:
     """
     This function initializes a user supplied function so that it can be used within the ESBMTK ecosystem.
@@ -91,6 +91,8 @@ def add_my_burial(
     print(f"Type of sink: {type(sink)}")
     print(f"Type of species: {type(species)}")
 
+    # ensure that the volume is in actual model units, and then strip
+    # the unit information
     model = species.mo
     dbv: float = source.volume.to(model.v_unit).magnitude
 
