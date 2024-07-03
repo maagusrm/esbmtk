@@ -54,8 +54,8 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     burial_flux = productivity_mol_year * frac_burial
 
     # Debug prints
-    print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
-    print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
+    # print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
+    # print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
 
     return -burial_flux
 
@@ -92,9 +92,9 @@ def add_my_burial(
     max_burial_fraction : float
         Maximum burial fraction
     """
-    print(f"Type of source: {type(source)}")
-    print(f"Type of sink: {type(sink)}")
-    print(f"Type of species: {type(species)}")
+    # print(f"Type of source: {type(source)}")
+    # print(f"Type of sink: {type(sink)}")
+    # print(f"Type of species: {type(species)}")
 
     # ensure that the volume is in actual model units, and then strip
     # the unit information
@@ -124,7 +124,7 @@ def add_my_burial(
     source.mo.lpc_f.append(ec.fname)
 
     # Debug prints
-    print(f"Source name: {source.full_name}, Sink name: {sink.full_name}")
-    print(
-        f"Function Params: {frac_burial}, {dbv}, {min_burial_fraction}, {max_burial_fraction}"
-    )
+    # print(f"Source name: {source.full_name}, Sink name: {sink.full_name}")
+    # print(
+    #   f"Function Params: {frac_burial}, {dbv}, {min_burial_fraction}, {max_burial_fraction}"
+    # )
