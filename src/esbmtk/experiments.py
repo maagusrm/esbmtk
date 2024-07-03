@@ -44,18 +44,21 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     """
     frac_burial, dbv, min_burial_fraction, max_burial_fraction = p
 
-    frac_burial = min_burial_fraction + (max_burial_fraction - min_burial_fraction) * (
-        o2_c / 100
-    )
+    # frac_burial = min_burial_fraction + (max_burial_fraction - min_burial_fraction) * (
+    # o2_c / 100
+    # )
+    frac_burial = min_burial_fraction
 
     # productivity in mol/year
     productivity_mol_year = po4_export_flux * 1e-6  # Convert umol/L to mol
 
-    burial_flux = productivity_mol_year * frac_burial
-
+    burial_flux = productivity_mol_year * frac_burial + (
+        7.6e9 * (1 - (-0.2 * o2_c + 18.4))
+    )
+    burial_flux += 5.56e-24 * (1 - burial_flux)
     # Debug prints
-    # print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
-    # print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
+    print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
+    print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
 
     return -burial_flux
 
@@ -98,10 +101,11 @@ def add_my_burial(
 
     # ensure that the volume is in actual model units, and then strip
     # the unit information
+    print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
     model = species.mo
     dbv: float = source.volume.to(model.v_unit).magnitude
 
-    print(f"Source name: {source.full_name}")
+    # print(f"Source name: {source.full_name}")
     ec = ExternalCode(
         name="calculate_burial",
         species=species,
