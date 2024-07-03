@@ -49,7 +49,7 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     )
 
     # productivity in mol/year
-    productivity_mol_year = po4_export_flux * dbv * 1e-6  # Convert umol/L to mol
+    productivity_mol_year = po4_export_flux * 1e-6  # Convert umol/L to mol
 
     burial_flux = productivity_mol_year * frac_burial
 
