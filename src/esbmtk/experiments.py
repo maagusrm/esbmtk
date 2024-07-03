@@ -30,6 +30,8 @@ from esbmtk import (
 # declare numpy types
 NDArrayFloat = npt.NDArray[np.float64]
 
+counter = 0
+
 
 def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     """#add an empty tuple
@@ -42,6 +44,9 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     :return: Burial flux in mol/year
     :rtype: float
     """
+    global counter
+    counter += 1
+
     frac_burial, dbv, min_burial_fraction, max_burial_fraction = p
 
     # frac_burial = min_burial_fraction + (max_burial_fraction - min_burial_fraction) * (
@@ -52,13 +57,15 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     # productivity in mol/year
     productivity_mol_year = po4_export_flux * 1e-6  # Convert umol/L to mol
 
-    burial_flux = productivity_mol_year * frac_burial + (
-        7.6e9 * (1 - (-0.2 * o2_c + 18.4))
-    )
-    burial_flux += 5.56e-24 * (1 - burial_flux)
-    # Debug prints
-    print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
-    print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
+    burial_flux = productivity_mol_year * frac_burial + (7.6e9 * (1 - 0.2))
+    # burial_flux += 5.56e-24 * (1 - burial_flux) ** 2.5
+    # Debug prints every 100th run
+    if counter % 100 == 0:
+        print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
+        print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
+        print(
+            f"Burial Flux from Fe-P: {burial_flux-(productivity_mol_year * frac_burial)}"
+        )
 
     return -burial_flux
 
@@ -101,7 +108,8 @@ def add_my_burial(
 
     # ensure that the volume is in actual model units, and then strip
     # the unit information
-    print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
+
+    # print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
     model = species.mo
     dbv: float = source.volume.to(model.v_unit).magnitude
 
