@@ -52,6 +52,11 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     productivity_mol_year = po4_export_flux * dbv * 1e-6  # Convert umol/L to mol
 
     burial_flux = productivity_mol_year * frac_burial
+
+    # Debug prints
+    print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
+    print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
+
     return -burial_flux
 
 
@@ -117,3 +122,9 @@ def add_my_burial(
     )
     register_return_values(ec, source)
     source.mo.lpc_f.append(ec.fname)
+
+    # Debug prints
+    print(f"Source name: {source.full_name}, Sink name: {sink.full_name}")
+    print(
+        f"Function Params: {frac_burial}, {dbv}, {min_burial_fraction}, {max_burial_fraction}"
+    )
