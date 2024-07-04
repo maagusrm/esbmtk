@@ -48,28 +48,32 @@ def calculate_burial(po4_export_flux: float, o2_c: float, p: tuple) -> float:
     counter += 1
 
     frac_burial, dbv, min_burial_fraction, max_burial_fraction = p
-
+    """
     frac_burial = min_burial_fraction + (max_burial_fraction - min_burial_fraction) * (
         o2_c / 100
     )
     # )
-    # frac_burial = min_burial_fraction
+    """
+    frac_burial = min_burial_fraction
 
     # productivity in mol/year
     productivity_mol_year = po4_export_flux  # Convert umol/L to mol
 
     burial_flux = productivity_mol_year * (frac_burial)
+
+    p_remineralisation_flux = (productivity_mol_year - frac_burial) * 138
     """+ (7.6e9 * (1 - 0.2))"""
     # burial_flux += 5.56e-24 * (1 - burial_flux) ** 2.5
     # Debug prints every 100th run
+    """
     if counter % 100 == 0:
         print(f"po4_export_flux: {po4_export_flux}, o2_c: {o2_c}")
         print(f"Burial Flux: {burial_flux}, Frac Burial: {frac_burial}")
         print(
             f"Burial Flux from Fe-P: {burial_flux-(productivity_mol_year * frac_burial)}"
         )
-
-    return -burial_flux
+    """
+    return -burial_flux, p_remineralisation_flux
 
 
 def add_my_burial(
@@ -81,6 +85,7 @@ def add_my_burial(
     frac_burial: float,
     min_burial_fraction: float,
     max_burial_fraction: float,
+    my_id,
 ) -> None:
     """
     This function initializes a user supplied function so that it can be used within the ESBMTK ecosystem.
@@ -130,7 +135,8 @@ def add_my_burial(
             max_burial_fraction,
         ),
         return_values=[
-            {f"F_{sink.full_name}.{species.name}": "burial_flux"},
+            {f"F_{sink.full_name}.{species.name}": f"{my_id}_burial_flux"},
+            {f"F_{source.full_name}.{species.name}": "p_remineralisation_flux"},
         ],
         register=source,
     )
