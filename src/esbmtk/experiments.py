@@ -85,7 +85,8 @@ def add_my_burial(
     frac_burial: float,
     min_burial_fraction: float,
     max_burial_fraction: float,
-    my_id,
+    my_id1,
+    my_id2,
 ) -> None:
     """
     This function initializes a user supplied function so that it can be used within the ESBMTK ecosystem.
@@ -135,8 +136,10 @@ def add_my_burial(
             max_burial_fraction,
         ),
         return_values=[
-            {f"F_{sink.full_name}.{species.name}": f"{my_id}_burial_flux"},
-            {f"F_{source.full_name}.{species.name}": "p_remineralisation_flux"},
+            {f"F_{sink.full_name}.{species.name}": f"{my_id1}_burial_flux"},
+            {
+                f"F_{source.full_name}.{species.name}": f"{my_id2}_p_remineralisation_flux"
+            },
         ],
         register=source,
     )
